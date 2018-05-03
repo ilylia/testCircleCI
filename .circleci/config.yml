@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  job1:
+    docker:
+      # specify the version
+      - image: circleci/golang:1.10
+
+    working_directory: /go/src/github.com/ilylia/testCircleCI
+    steps:
+      - run: echo job1
+
+  job2:
+    machine: true
+    working_directory: /home/circleci/.go_workspace/src/github.com/ilylia/testCircleCI
+
+    steps:
+      - run: echo job2
+
+workflows:
+  version: 2
+  test_build:
+    jobs:
+      - job1:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+      - job2:
+          filters:
+            tags:
+              only: /^v.*$/
+            branches:
+              ignore: /.*/
